@@ -1,201 +1,95 @@
 # Moltbot - 智能AI助手框架
 
-![Moltbot Architecture](https://docs.molt.bot/assets/moltbot-architecture.png)
+## 技术原理
 
-Moltbot是一个先进的AI助手框架，旨在提供无缝的个人助理体验。通过结合大型语言模型、工具集成和智能记忆系统，Moltbot能够理解上下文、执行复杂任务并与用户进行自然对话。
+Moltbot是一个基于大语言模型（LLM）的智能AI助手框架，专为个人和团队设计，提供强大的自动化、记忆管理和多工具集成能力。
 
-## 技术架构
+### 核心架构
 
-### 核心组件
+#### 1. **多层代理系统 (Multi-Agent Architecture)**
+- **主代理 (Main Agent)**: 处理用户直接交互，维护长期记忆和上下文
+- **子代理 (Sub-Agents)**: 执行特定任务的独立代理，如文件处理、网络搜索、代码生成等
+- **会话隔离**: 每个任务在独立的会话中运行，确保安全性和稳定性
 
-#### 1. **Gateway守护进程**
-- **作用**: Moltbot的核心运行时，管理所有会话和工具调用
-- **特性**: 
-  - 持久化运行，确保7x24小时可用性
-  - 安全的工具执行环境
-  - 会话状态管理和恢复
-  - 自动更新和配置管理
+#### 2. **记忆管理系统 (Memory Management)**
+- **短期记忆**: 当前会话的上下文和临时信息
+- **长期记忆 (MEMORY.md)**: 重要的决策、偏好和学习到的知识
+- **每日日志 (memory/YYYY-MM-DD.md)**: 详细的活动记录和原始数据
+- **语义搜索**: 基于向量的内存检索，快速找到相关信息
 
-#### 2. **Agent会话系统**
-- **作用**: 处理用户交互和AI推理
-- **特性**:
-  - 支持多种AI模型（Qwen3, GPT等）
-  - 上下文感知的对话管理
-  - 工具调用和外部API集成
-  - 子代理（sub-agent）任务分解
+#### 3. **工具集成框架 (Tool Integration Framework)**
+- **技能系统 (Skills)**: 可扩展的功能模块，每个技能提供特定能力
+- **统一工具接口**: 标准化的工具调用协议，支持各种外部服务
+- **安全执行环境**: 工具在受控环境中运行，防止意外破坏
 
-#### 3. **Memory记忆系统**
-- **作用**: 提供长期记忆和上下文连续性
-- **文件结构**:
-  - `MEMORY.md`: 长期记忆，存储重要决策、偏好和知识
-  - `memory/YYYY-MM-DD.md`: 日常日志，记录每日活动和事件
-  - 自动记忆维护和清理
+#### 4. **工作空间管理 (Workspace Management)**
+- **统一工作目录**: 所有操作在 `/home/admin/clawd` 目录下进行
+- **文件组织**: 结构化的文件系统，便于管理和协作
+- **版本控制**: 自动Git集成，确保所有更改可追踪
 
-#### 4. **Skills技能系统**
-- **作用**: 扩展Moltbot的功能能力
-- **特性**:
-  - 模块化的技能包设计
-  - 标准化的SKILL.md文档格式
-  - 脚本和二进制工具集成
-  - ClawdHub技能市场支持
+### 技术栈
 
-### 工作流程
+- **核心语言**: Node.js + TypeScript
+- **AI模型**: 支持多种大语言模型（Qwen、OpenAI、Google等）
+- **存储**: 本地文件系统 + Git版本控制
+- **通信**: WebSocket + REST API
+- **安全**: 沙箱执行环境 + 权限控制
 
-```mermaid
-graph TD
-    A[用户输入] --> B{Gateway接收}
-    B --> C[Agent会话处理]
-    C --> D{需要工具调用?}
-    D -- 是 --> E[执行工具]
-    D -- 否 --> F[直接响应]
-    E --> G[工具结果处理]
-    G --> H[AI推理和响应生成]
-    H --> I[返回用户]
-    C --> J[Memory系统]
-    J --> K[读取历史上下文]
-    J --> L[写入新记忆]
-```
-
-### 关键技术特性
+### 主要特性
 
 #### 🧠 **智能推理**
-- **思维链（Chain-of-Thought）**: 支持复杂的多步推理
-- **工具选择**: 智能选择合适的工具完成任务
-- **错误恢复**: 自动检测和修复执行错误
+- 上下文感知的对话理解
+- 复杂任务的分步规划
+- 工具选择和参数优化
 
-#### 🔧 **工具集成**
-- **文件操作**: 读写、编辑、搜索文件
-- **系统命令**: 安全执行shell命令
-- **Web交互**: 浏览器控制、网页抓取
-- **消息传递**: 多平台消息发送（Telegram, Discord, Signal等）
-- **定时任务**: Cron作业和提醒系统
+#### 📚 **持久化记忆**
+- 自动学习用户偏好和习惯
+- 跨会话的知识积累
+- 记忆清理和优化机制
 
-#### 💾 **记忆管理**
-- **语义搜索**: 基于向量的内存检索
-- **自动摘要**: 日常活动的智能摘要
-- **隐私保护**: 敏感信息的自动过滤
-- **记忆优化**: 定期清理和整理记忆
+#### 🔧 **丰富工具集**
+- 文件读写和编辑
+- 网络搜索和内容提取
+- 代码生成和调试
+- 系统命令执行
+- GitHub集成
+- 天气、日历等实用工具
 
-#### 🌐 **多平台支持**
-- **Web聊天**: 内置Web界面
-- **消息平台**: Telegram, Discord, WhatsApp, Signal, iMessage等
-- **浏览器扩展**: Chrome扩展实现网页交互
-- **移动集成**: 节点系统支持移动设备控制
+#### 🤖 **多通道支持**
+- Web聊天界面
+- Discord、Telegram、Slack等消息平台
+- iMessage、WhatsApp等移动消息
+- 语音交互（TTS/STT）
 
-## 快速开始
+### 安全设计
 
-### 安装要求
-- Linux系统（推荐Ubuntu/CentOS）
-- Node.js v18+
-- Git
-- Docker（可选，用于隔离环境）
+- **最小权限原则**: 工具只在必要时请求权限
+- **沙箱执行**: 危险操作在隔离环境中运行
+- **审计日志**: 所有操作都有详细记录
+- **隐私保护**: 敏感信息不会泄露到外部
 
-### 基本使用
+### 使用场景
 
-```bash
-# 克隆仓库
-git clone https://github.com/tsdlrh/moltbot.git
-cd moltbot
+- **个人助理**: 日程管理、信息查询、文件处理
+- **开发助手**: 代码生成、调试、文档编写
+- **研究工具**: 数据收集、分析、报告生成
+- **自动化脚本**: 重复任务的自动化执行
 
-# 查看状态
-moltbot status
+### 快速开始
 
-# 启动Gateway
-moltbot gateway start
+1. **安装依赖**: 确保Node.js和Git已安装
+2. **克隆仓库**: `git clone https://github.com/tsdlrh/moltbot.git`
+3. **配置认证**: 运行 `gh auth login` 配置GitHub
+4. **启动服务**: 运行Moltbot Gateway
+5. **开始使用**: 通过Web界面或消息平台与Moltbot交互
 
-# 交互式使用
-# 直接在Web界面或消息平台与Moltbot对话
-```
+### 贡献指南
 
-### 常用命令
-
-```bash
-# 系统状态
-moltbot status
-moltbot gateway status
-
-# 会话管理  
-moltbot session list
-moltbot session history <session-id>
-
-# 技能管理
-moltbot skill list
-moltbot skill install <skill-name>
-
-# 配置管理
-moltbot config get
-moltbot config apply
-```
-
-## 开发指南
-
-### 创建自定义技能
-
-1. **创建技能目录**
-   ```bash
-   mkdir -p /opt/moltbot/skills/my-skill
-   ```
-
-2. **编写SKILL.md**
-   ```markdown
-   ---
-   name: my-skill
-   description: My custom skill description
-   metadata: {"moltbot":{"requires":{"bins":["my-tool"]}}}
-   ---
-   
-   # Skill Documentation
-   Usage instructions and examples...
-   ```
-
-3. **添加脚本或工具**
-   ```bash
-   mkdir -p /opt/moltbot/skills/my-skill/scripts
-   # Add your scripts here
-   ```
-
-### 内存管理最佳实践
-
-- **写入重要信息**: 使用`memory/YYYY-MM-DD.md`记录日常事件
-- **更新长期记忆**: 定期将重要决策和偏好写入`MEMORY.md`
-- **避免敏感数据**: 不要在记忆文件中存储密码或私密信息
-- **定期清理**: 删除过时或不再相关的信息
-
-## 安全特性
-
-### 执行安全
-- **沙箱环境**: 工具执行在受限环境中进行
-- **权限控制**: 敏感操作需要明确授权
-- **输入验证**: 所有外部输入都经过严格验证
-- **审计日志**: 完整的操作日志记录
-
-### 数据隐私
-- **本地存储**: 所有数据默认存储在本地
-- **加密传输**: 支持HTTPS和端到端加密
-- **访问控制**: 基于角色的访问权限管理
-- **数据最小化**: 只收集必要的数据
-
-## 社区和支持
-
-- **官方文档**: [https://docs.molt.bot](https://docs.molt.bot)
-- **源码仓库**: [https://github.com/moltbot/moltbot](https://github.com/moltbot/moltbot)
-- **社区讨论**: [Discord邀请链接](https://discord.com/invite/clawd)
-- **技能市场**: [ClawdHub](https://clawdhub.com)
-
-## 贡献指南
-
-欢迎贡献代码、文档或新技能！请遵循以下步骤：
-
-1. Fork仓库
-2. 创建特性分支 (`git checkout -b feature/your-feature`)
-3. 提交更改 (`git commit -am 'Add some feature'`)
-4. 推送到分支 (`git push origin feature/your-feature`)
-5. 创建Pull Request
-
-## 许可证
-
-Moltbot采用MIT许可证 - 详见[LICENSE](LICENSE)文件。
+欢迎贡献新的技能、工具或改进现有功能！
+- 创建新技能: 参考 `/opt/moltbot/skills/` 目录结构
+- 报告问题: 在GitHub Issues中提交
+- 提交PR: 遵循代码规范和测试要求
 
 ---
 
-> **注意**: 本README描述的是Moltbot框架的一般架构。具体的实现细节可能因版本和配置而异。
+**Moltbot - 让AI真正成为你的智能伙伴**
