@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moltbot 生成的网页示例</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            text-align: center;
+            max-width: 600px;
+            width: 100%;
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 2.5em;
+        }
+        
+        p {
+            color: #666;
+            font-size: 1.1em;
+            line-height: 1.6;
+        }
+        
+        .interactive-section {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 15px;
+        }
+        
+        input[type="text"] {
+            padding: 12px;
+            width: 70%;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 16px;
+            margin-right: 10px;
+        }
+        
+        button {
+            padding: 12px 24px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        button:hover {
+            background: #5a6fd8;
+        }
+        
+        #result {
+            margin-top: 20px;
+            padding: 15px;
+            background: #e8f4fd;
+            border-radius: 10px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>✨ Moltbot 网页生成器</h1>
+        <p>这是一个由 AI 助手 Moltbot 自动生成的交互式网页！</p>
+        <p>你可以直接在浏览器中使用这个页面，无需任何服务器。</p>
+        
+        <div class="interactive-section">
+            <h3>试试交互功能：</h3>
+            <input type="text" id="userInput" placeholder="输入你的名字..." />
+            <button onclick="greetUser()">打招呼</button>
+            <div id="result"></div>
+        </div>
+    </div>
+
+    <script>
+        function greetUser() {
+            const input = document.getElementById('userInput');
+            const result = document.getElementById('result');
+            const name = input.value.trim();
+            
+            if (name) {
+                result.innerHTML = `<strong>你好, ${name}! 👋</strong><br>欢迎使用 Moltbot 生成的网页！`;
+                result.style.display = 'block';
+            } else {
+                result.innerHTML = '<strong>请输入你的名字！</strong>';
+                result.style.display = 'block';
+            }
+        }
+        
+        // 允许按回车键触发
+        document.getElementById('userInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                greetUser();
+            }
+        });
+    </script>
+</body>
+</html>
